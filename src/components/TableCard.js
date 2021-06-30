@@ -22,6 +22,7 @@ export default function CardTable() {
   const [loadingBar, setLoadingBar] = useState(false);
   const [snackBar, setSnackBar] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const [showModalAdd, setShowModalAdd] = useState(false)
   const [severityAlert, setSeverityAlert] = useState('success');
   const [alertMsg, setAlertMsg] = useState('Action Success!')
 
@@ -51,6 +52,18 @@ export default function CardTable() {
     }
 
     setSnackBar(false);
+  };
+  const handleModalAddSave = (e) => {
+    setLoadingBar(true)
+    setDisabled(true);
+    setTimeout(() => {
+        setAlertMsg('Action Failed!')
+        setSeverityAlert('error');
+        setLoadingBar(false);
+        setSnackBar(true);
+        setShowModalEdit(false);
+        setDisabled(false);
+    }, 4000);
   };
   const handleModalEditSave = (e) => {
     setLoadingBar(true)
@@ -84,8 +97,22 @@ export default function CardTable() {
 
   return (
     <Card>
-      <CardHeader color="purple" contentPosition="left">
-        <h2 className="text-white text-2xl">List User</h2>
+      <CardHeader color="purple" contentPosition="none">
+        <div className="w-full flex items-center justify-between">
+          <h2 className="text-white text-2xl">List User</h2>
+          <Button
+            color="green"
+            buttonType="filled"
+            size="regular"
+            rounded={false}
+            block={false}
+            iconOnly={false}
+            ripple="light"
+            onClick={(e) => setShowModalAdd(true)}
+        >
+          Add
+        </Button>
+        </div>
       </CardHeader>
       <CardBody>
         <div className="overflow-x-auto">
@@ -248,6 +275,73 @@ export default function CardTable() {
             </Button>
           </ModalFooter>
         </Modal>
+
+        {/* MODAL ADD */}
+      <Modal size="regular" active={showModalAdd}>
+        <ModalHeader toggler={!disabled ? () => setShowModalAdd(false): null}>
+          Add User
+        </ModalHeader>
+        <ModalBody>
+        {loadingBar && <LinearProgress />}
+            <form>
+                  <div className="flex flex-wrap mt-10">
+                      <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
+                          <Input
+                              onChange={(e) => handleFullName(e)}
+                              type="text"
+                              color="purple"
+                              placeholder="Full Name"
+                          />
+                      </div>
+                      <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                          <Input
+                              onChange={(e) => handleEmail(e)}
+                              type="email"
+                              color="purple"
+                              placeholder="Email Address"
+                          />
+                      </div>
+                      <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
+                          <Input
+                              onChange={(e) => handlePassword(e)}
+                              type="password"
+                              color="purple"
+                              placeholder="Password"
+                          />
+                      </div>
+                      <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                          <Input
+                              onChange={(e) => handleConfirmPassword(e)}
+                              type="password"
+                              color="purple"
+                              placeholder="Password Confirm"
+                          />
+                      </div>
+                  </div>
+              </form>
+        </ModalBody>
+        <ModalFooter>
+            <Button 
+              disabled={disabled}
+              color="red"
+              buttonType="link"
+              onClick={(e) => setShowModalAdd(false)}
+              ripple="dark"
+            >
+              Close
+            </Button>
+
+            <Button
+              disabled={disabled}
+              color="green"
+              onClick={(e) => handleModalAddSave(e)}
+              ripple="light"
+            >
+              Add User
+            </Button>
+          </ModalFooter>
+        </Modal>
+
         {/* MODAL DELETE */}
           <Modal size="sm" active={showModalDelete}>
               <ModalHeader toggler={() => setShowModalDelete(false)}>

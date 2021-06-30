@@ -1,9 +1,12 @@
 import EstimationForm from 'components/EstimationForm';
 import ResultCard from 'components/ResultCard';
+import Sidebar from "components/Sidebar";
 
 export default function Dashboard() {
     return (
         <>
+        <Sidebar/>
+        <div className="md:ml-64">
             <div className="bg-light-blue-500 px-3 md:px-8 h-40" />
                 <div className="px-3 md:px-8 h-auto -mt-24">
                 <div className="container mx-auto max-w-full">
@@ -17,6 +20,7 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
+        </div>
         </>
     );
 }

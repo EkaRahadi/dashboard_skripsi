@@ -1,9 +1,12 @@
 import SettingsForm from 'components/SettingsForm';
 import ProfileCard from 'components/ProfileCard';
+import Sidebar from "components/Sidebar";
 
 export default function Dashboard() {
     return (
         <>
+        <Sidebar/>
+        <div className="md:ml-64">
             <div className="bg-light-blue-500 pt-14 pb-28 px-3 md:px-8 h-auto"></div>
 
             <div className="px-3 md:px-8 h-auto -mt-24">
@@ -18,6 +21,7 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
+        </div>
         </>
     );
 }
