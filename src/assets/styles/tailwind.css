@@ -793,6 +793,9 @@ video {
 .bg-gradient-to-tr{
 	background-image: linear-gradient(to top right, var(--tw-gradient-stops));
 }
+.bg-login-background{
+	background-image: linear-gradient(rgba(0,0,0, 0.75), rgba(0,0,0, 0.75)), url('/src/assets/img/background-1920x1280.jpg');
+}
 .bg-cover{
 	background-size: cover;
 }
@@ -936,6 +939,9 @@ video {
 .duration-300{
 	transition-duration: 300ms;
 }
+.-translate-x-1\/2 {
+        --tw-translate-x: -50% !important;
+    }
 .tippy-box[data-placement^=top]>.tippy-svg-arrow{bottom:0}
 .tippy-box[data-placement^=top]>.tippy-svg-arrow:after,.tippy-box[data-placement^=top]>.tippy-svg-arrow>svg{top:16px;transform:rotate(180deg)}
 .tippy-box[data-placement^=bottom]>.tippy-svg-arrow{top:0}

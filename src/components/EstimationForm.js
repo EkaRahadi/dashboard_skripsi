@@ -23,27 +23,27 @@ export default function EstimationForm() {
 
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
-      }
+      };
 
     const handleParam1 = (e) => {
         e.preventDefault();
         setParam1(e.target.value);
-    }
+    };
     const handleParam2 = (e) => {
         e.preventDefault();
         setParam2(e.target.value);
-    }
+    };
     const handleParam3 = (e) => {
         e.preventDefault();
         setParam3(e.target.value);
-    }
+    };
     const handleParam4 = (e) => {
         e.preventDefault();
         setParam4(e.target.value);
-    }
+    };
     const handleRadio = (e) => {
         setAlgorithm(e.target.value);
-    }
+    };
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -64,7 +64,7 @@ export default function EstimationForm() {
             setDisabled(false);
             setSnackBar(true)
         }, 3000)
-    }
+    };
     
     useEffect(() => {
         console.log(param1);

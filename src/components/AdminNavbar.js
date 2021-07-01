@@ -4,7 +4,7 @@ import Icon from '@material-tailwind/react/Icon';
 import NavbarInput from '@material-tailwind/react/NavbarInput';
 import Image from '@material-tailwind/react/Image';
 import Dropdown from '@material-tailwind/react/Dropdown';
-import DropdownItem from '@material-tailwind/react/DropdownItem';
+import DropdownLink from "@material-tailwind/react/DropdownLink"
 import ProfilePicture from 'assets/img/team-1-800x800.jpg';
 
 export default function AdminNavbar({ showSidebar, setShowSidebar }) {
@@ -68,9 +68,13 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                                     color: 'transparent',
                                 }}
                             >
-                                <DropdownItem color="lightBlue">
+                                <DropdownLink 
+                                    color="lightBlue"
+                                    ripple="light"
+                                    onClick={(e) => console.log("logout")}
+                                    >
                                     Logout
-                                </DropdownItem>
+                                </DropdownLink>
                             </Dropdown>
                         </div>
                     </div>
