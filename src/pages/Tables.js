@@ -1,7 +1,8 @@
 import TableCard from "components/TableCard";
 import Sidebar from "components/Sidebar";
+import { withRouter } from "react-router-dom";
 
-export default function Dashboard() {
+function Dashboard() {
   return (
     <>
     <Sidebar/>
@@ -19,3 +20,5 @@ export default function Dashboard() {
     </>
   );
 }
+
+export default withRouter(Dashboard);
