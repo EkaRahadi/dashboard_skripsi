@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+// import { useRecoilValue } from 'recoil';
 import Card from '@material-tailwind/react/Card';
 import CardHeader from '@material-tailwind/react/CardHeader';
 import CardBody from '@material-tailwind/react/CardBody';
@@ -11,6 +12,8 @@ import Container from 'components/login/Container';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import { login } from '../api/authApi';
+// import { userProfile, agePredict } from '../store/index';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -19,7 +22,7 @@ export default function Login() {
     const [loadingBar, setLoadingBar] = useState(false);
     const [snackBar, setSnackBar] = useState(false);
     const [severityAlert, setSeverityAlert] = useState('success');
-    const [alertMsg, setAlertMsg] = useState('Estimation Success!')
+    const [alertMsg, setAlertMsg] = useState('Estimation Success!');
 
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -42,23 +45,44 @@ export default function Login() {
         setPassword(e.target.value);
     };
     const handleLogin = (e) => {
+        e.preventDefault();
+        const payload = {
+            email: email,
+            password: password
+        }
         setLoadingBar(true);
         setDisabled(true);
 
-        setTimeout(() => {
-            setAlertMsg('Login Failed Failed!')
-            setSeverityAlert('error');
-            setLoadingBar(false);
-            setDisabled(false);
-            setSnackBar(true)
-        }, 4000)
-    }
+        login(payload)
+            .then(data => {
+                console.log(data);
+                window.localStorage.setItem("token", data.token);
+                window.localStorage.setItem("refreshToken", data.refreshToken);
+
+                // Save Ke recoil userProfile
+
+                setAlertMsg('Login Success !')
+                setSeverityAlert('success');
+            })
+            .catch(error => {
+                setAlertMsg('Login Failed !')
+                setSeverityAlert('error');
+            })
+            .finally(() => {
+                setLoadingBar(false);
+                setDisabled(false);
+                setSnackBar(true);
+                setEmail('');
+                setPassword('');
+            })
+
+    };
 
     useEffect(() => {
-        console.log(email);
-        console.log(password);
+
     })
     return (
+        <Suspense>
         <Page>
             <Container>
                 <Card>
@@ -112,5 +136,6 @@ export default function Login() {
                         </Alert>
                     </Snackbar>
         </Page>
+        </Suspense>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useState }from "react";
+import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Dashboard from "pages/Dashboard";
 import Settings from "pages/Settings";
@@ -11,15 +11,16 @@ import ProtectedRoute from "components/route/ProtectedRoute";
 import "assets/styles/tailwind.css";
 
 function App() {
-  const [isAuth, setIsAuth] = useState(false);
+  const token = window.localStorage.getItem("token");
+
   return (
     <>
         <Switch>
           <Route exact path="/" component={LandingPage} />
           <Route exact path="/login" component={Login} />
-          <ProtectedRoute exact path="/settings" component={Settings} isAuth={isAuth} />
-          <ProtectedRoute exact path="/users" component={Tables} isAuth={isAuth} />
-          <ProtectedRoute exact path="/dashboard" component={Dashboard} isAuth={isAuth} />
+          <ProtectedRoute exact path="/settings" component={Settings} isAuth={ token ? true : false } />
+          <ProtectedRoute exact path="/users" component={Tables} isAuth={ token ? true : false } />
+          <ProtectedRoute exact path="/dashboard" component={Dashboard} isAuth={ token ? true : false } />
           <Redirect from="*" to="/" />
         </Switch>
     </>
