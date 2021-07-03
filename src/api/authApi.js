@@ -88,8 +88,10 @@ export const updateUser = (payload, token) => {
     const params = new URLSearchParams();
     const {email, password, name, userId} = payload;
     params.append('email', email);
-    params.append('password', password);
     params.append('name', name);
+    if (password) {
+        params.append('password', password);
+    }
 
     return new Promise((resolve, reject) => {
         axios

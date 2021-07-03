@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { userList } from "../store/index"
+import { userList, userProfile } from "../store/index"
 import Card from "@material-tailwind/react/Card";
 import CardHeader from "@material-tailwind/react/CardHeader";
 import CardBody from "@material-tailwind/react/CardBody";
@@ -13,7 +13,7 @@ import Input from '@material-tailwind/react/Input';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import { addUser, getAllUser, updateUser, deleteUser } from '../api/authApi';
+import { addUser, getAllUser, updateUser, deleteUser, getUser } from '../api/authApi';
 
 export default function CardTable() {
   const [showModalEdit, setShowModalEdit] = useState(false);
@@ -32,6 +32,7 @@ export default function CardTable() {
 
   const [users, setUsers] = useRecoilState(userList);
   const token = window.localStorage.getItem("token");
+  const [currentUser, setCurrentUser] = useRecoilState(userProfile);
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -62,7 +63,7 @@ export default function CardTable() {
   };
   const handleModalAddSave = (e) => {
     e.preventDefault();
-    if (password !== confirmPassword || password === '' || confirmPassword === '') {
+    if (password !== confirmPassword) {
       setAlertMsg('Password and Confirm Password not match !')
       setSeverityAlert('error');
       setSnackBar(true);
@@ -102,10 +103,6 @@ export default function CardTable() {
         setDisabled(false);
         setShowModalAdd(false);
       })
-    setTimeout(() => {
-
-
-    }, 4000);
   };
   const handleModalEditSave = (e) => {
     e.preventDefault();
@@ -122,9 +119,14 @@ export default function CardTable() {
     const payload = {
       email: email,
       name: fullname,
-      password: password,
       userId: userId
     }
+
+    if (password !== '') {
+      payload['password'] = password
+    }
+
+    console.log(payload);
 
     updateUser(payload, token)
       .then(data => {
@@ -138,6 +140,16 @@ export default function CardTable() {
           .catch(error => {
             console.log(error);
           })
+        
+          if (currentUser.user_id === userId) {
+            getUser({userId: userId}, token)
+              .then( data => {
+                setCurrentUser(data.data[0])
+              })
+              .catch(error => {
+                console.log(error);
+              })
+          }
       })
       .catch(error => {
         setAlertMsg('Action Failed !')

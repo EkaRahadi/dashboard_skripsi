@@ -47,7 +47,7 @@ export default function SettingsForm() {
     };
     const handleSave = (e) => {
         e.preventDefault();
-        if (password !== confirmPassword || password === '' || confirmPassword === '') {
+        if (password !== confirmPassword) {
             setAlertMsg('Password and Confirm Password not match !')
             setSeverityAlert('error');
             setSnackBar(true);
@@ -60,8 +60,11 @@ export default function SettingsForm() {
         const payload = {
             userId: user.user_id,
             email: email,
-            password: password,
             name: fullname
+        }
+
+        if(password !== '') {
+            payload['password'] = password;
         }
 
         updateUser(payload, token)
