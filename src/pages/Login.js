@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Suspense } from 'react';
-// import { useRecoilValue } from 'recoil';
+import React, { useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import Card from '@material-tailwind/react/Card';
 import CardHeader from '@material-tailwind/react/CardHeader';
 import CardBody from '@material-tailwind/react/CardBody';
@@ -13,7 +13,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { login } from '../api/authApi';
-// import { userProfile, agePredict } from '../store/index';
+import { userProfile } from '../store/index';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -22,7 +22,9 @@ export default function Login() {
     const [loadingBar, setLoadingBar] = useState(false);
     const [snackBar, setSnackBar] = useState(false);
     const [severityAlert, setSeverityAlert] = useState('success');
-    const [alertMsg, setAlertMsg] = useState('Estimation Success!');
+    const [alertMsg, setAlertMsg] = useState('Login Success!');
+
+    const setUser = useSetRecoilState(userProfile);
 
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -55,14 +57,14 @@ export default function Login() {
 
         login(payload)
             .then(data => {
-                console.log(data);
+                setUser(data.data);
                 window.localStorage.setItem("token", data.token);
                 window.localStorage.setItem("refreshToken", data.refreshToken);
-
-                // Save Ke recoil userProfile
-
+                
                 setAlertMsg('Login Success !')
                 setSeverityAlert('success');
+
+                window.location.replace("/dashboard");
             })
             .catch(error => {
                 setAlertMsg('Login Failed !')
@@ -78,11 +80,7 @@ export default function Login() {
 
     };
 
-    useEffect(() => {
-
-    })
     return (
-        <Suspense>
         <Page>
             <Container>
                 <Card>
@@ -136,6 +134,5 @@ export default function Login() {
                         </Alert>
                     </Snackbar>
         </Page>
-        </Suspense>
     );
 }

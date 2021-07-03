@@ -1,24 +1,15 @@
-import { atom, selector } from 'recoil';
-import axios from 'axios';
+import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist'
+
+const { persistAtom } = recoilPersist()
 
 export const userProfile = atom({
-    key: "userProfile",
-    default: {}
+    key: 'userProfile',
+    default: {},
+    effects_UNSTABLE: [persistAtom],
 });
-export const agePredict = selector({
-    key: "agePredict",
-    get: async () => {
-        let agePredict = null;
 
-        try {
-            let { data } = axios.get('https://api.agify.io/?name=bella');
-            agePredict = { agePredict: data };
-
-        } catch (error) {
-            agePredict = { agePredict: error.message };
-        }
-
-
-        return agePredict;
-    }
-})
+export const userList = atom({
+    key: 'userList',
+    default: [],
+});

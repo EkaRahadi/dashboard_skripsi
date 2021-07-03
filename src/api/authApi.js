@@ -10,24 +10,23 @@ const refreshToken = (failedRequest) => {
     return new Promise((resolve, reject) => {
         axios
             .post(API_BASE_URL + `/refreshToken`, params, {
-                // auth: {
-                //     username: "app-ihz-smartsurvey",
-                //     password: "smartsurvey",
-                // },
-                'x-access-token': refresh_token
+                headers: {
+                    'x-access-token': refresh_token,
+                },
             })
             .then((response) => {
                 console.log(response);
-                const data = response.data.data;
-                window.localStorage.setItem("token", data.accessToken);
-                window.localStorage.setItem("refreshToken", data.refreshToken);
-                failedRequest.response.config.headers["x-access-token"] = data.accessToken;
+                const data = response.data;
+                window.localStorage.setItem("token", data.token);
+                // window.localStorage.setItem("refreshToken", data.refreshToken);
+                failedRequest.response.config.headers["x-access-token"] = data.token;
                 resolve();
             })
             .catch((error) => {
-                console.log(error.response);
+                console.log(error);
                 window.localStorage.removeItem("token");
                 window.localStorage.removeItem("refreshToken");
+                window.localStorage.clear();
                 window.location.replace("/login");
                 reject(error);
             });
@@ -38,7 +37,7 @@ createAuthRefreshInterceptor(axios, refreshToken, {
     statusCodes: [401],
 });
 
-export const login = (payload, token) => {
+export const login = (payload) => {
     const params = new URLSearchParams();
     const {email, password} = payload;
     params.append('email', email);
@@ -46,7 +45,119 @@ export const login = (payload, token) => {
 
     return new Promise((resolve, reject) => {
         axios
-            .post(API_BASE_URL + `/login`, params, {})
+            .post(API_BASE_URL + `/login`, params, {
+                skipAuthRefresh: true
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error);
+                reject(error);
+            });
+    });
+}
+
+export const addUser = (payload, token) => {
+    const params = new URLSearchParams();
+    const { email, password, name } = payload;
+    params.append('email', email);
+    params.append('password', password);
+    params.append('name', name);
+
+    return new Promise((resolve, reject) => {
+        axios
+            .post(API_BASE_URL + `/users`, params, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error);
+                reject(error);
+            });
+    });
+}
+
+export const updateUser = (payload, token) => {
+    const params = new URLSearchParams();
+    const {email, password, name, userId} = payload;
+    params.append('email', email);
+    params.append('password', password);
+    params.append('name', name);
+
+    return new Promise((resolve, reject) => {
+        axios
+            .put(API_BASE_URL + `/users/${userId}`, params, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error);
+                reject(error);
+            });
+    });
+}
+
+export const getUser = (payload, token) => {
+    const { userId } = payload;
+
+    return new Promise((resolve, reject) => {
+        axios
+            .get(API_BASE_URL + `/users/${userId}`, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error.response);
+                reject(error);
+            });
+    });
+}
+
+export const getAllUser = (token) => {
+    return new Promise((resolve, reject) => {
+        axios
+            .get(API_BASE_URL + `/users`, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error.response);
+                reject(error);
+            });
+    });
+}
+
+export const deleteUser = (payload, token) => {
+    const { userId } = payload;
+    return new Promise((resolve, reject) => {
+        axios
+            .delete(API_BASE_URL + `/users/${userId}`, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
             .then((response) => {
                 const { data } = response ;
                 resolve(data);

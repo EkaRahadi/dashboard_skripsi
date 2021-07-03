@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { userList } from "../store/index"
 import Card from "@material-tailwind/react/Card";
 import CardHeader from "@material-tailwind/react/CardHeader";
 import CardBody from "@material-tailwind/react/CardBody";
@@ -11,6 +13,7 @@ import Input from '@material-tailwind/react/Input';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import { addUser, getAllUser, updateUser, deleteUser } from '../api/authApi';
 
 export default function CardTable() {
   const [showModalEdit, setShowModalEdit] = useState(false);
@@ -19,12 +22,16 @@ export default function CardTable() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [userId, setUserId] = useState('');
   const [loadingBar, setLoadingBar] = useState(false);
   const [snackBar, setSnackBar] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [showModalAdd, setShowModalAdd] = useState(false)
   const [severityAlert, setSeverityAlert] = useState('success');
   const [alertMsg, setAlertMsg] = useState('Action Success!')
+
+  const [users, setUsers] = useRecoilState(userList);
+  const token = window.localStorage.getItem("token");
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -54,46 +61,162 @@ export default function CardTable() {
     setSnackBar(false);
   };
   const handleModalAddSave = (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword || password === '' || confirmPassword === '') {
+      setAlertMsg('Password and Confirm Password not match !')
+      setSeverityAlert('error');
+      setSnackBar(true);
+      return;
+    }
+
     setLoadingBar(true)
     setDisabled(true);
-    setTimeout(() => {
-        setAlertMsg('Action Failed!')
+
+    const payload = {
+      name: fullname,
+      email: email,
+      password: password
+    }
+
+    addUser(payload, token)
+      .then(data => {
+        setAlertMsg('Action Success !')
+        setSeverityAlert('success');
+
+        getAllUser(token)
+          .then( data => {
+            setUsers(data.data);
+          })
+          .catch(error => {
+            console.log(error);
+          })
+      })
+      .catch(error => {
+        setAlertMsg('Action Failed !')
         setSeverityAlert('error');
+      })
+      .finally(() => {
         setLoadingBar(false);
         setSnackBar(true);
         setShowModalEdit(false);
         setDisabled(false);
+        setShowModalAdd(false);
+      })
+    setTimeout(() => {
+
+
     }, 4000);
   };
   const handleModalEditSave = (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setAlertMsg('Password and Confirm Password not match !')
+      setSeverityAlert('error');
+      setSnackBar(true);
+      return;
+    }
+
     setLoadingBar(true)
     setDisabled(true);
-    setTimeout(() => {
-        setAlertMsg('Action Failed!')
+
+    const payload = {
+      email: email,
+      name: fullname,
+      password: password,
+      userId: userId
+    }
+
+    updateUser(payload, token)
+      .then(data => {
+        setAlertMsg('Action Success !')
+        setSeverityAlert('success');
+
+        getAllUser(token)
+          .then( data => {
+            setUsers(data.data);
+          })
+          .catch(error => {
+            console.log(error);
+          })
+      })
+      .catch(error => {
+        setAlertMsg('Action Failed !')
         setSeverityAlert('error');
+      })
+      .finally(() => {
         setLoadingBar(false);
         setSnackBar(true);
         setShowModalEdit(false);
         setDisabled(false);
-    }, 4000);
+      })
+
   };
   const handleModalDelete = (e) => {
+    e.preventDefault();
+
     setLoadingBar(true)
     setDisabled(true);
-    setTimeout(() => {
-      setLoadingBar(false);
-      setSnackBar(true);
-      setShowModalDelete(false);
-      setDisabled(false);
-  }, 4000);
+
+    const payload = {
+      userId: userId
+    }
+
+    deleteUser(payload, token)
+      .then(data => {
+        setAlertMsg('Action Success !')
+        setSeverityAlert('success');
+
+        getAllUser(token)
+          .then( data => {
+            setUsers(data.data);
+          })
+          .catch(error => {
+            console.log(error);
+          })
+      })
+      .catch(error => {
+        setAlertMsg('Action Failed !')
+        setSeverityAlert('error');
+      })
+      .finally(() => {
+        setLoadingBar(false);
+        setSnackBar(true);
+        setShowModalDelete(false);
+        setDisabled(false);
+      })
+  }
+
+  const resetState = () => {
+    setEmail('');
+    setFullname('');
+    setPassword('');
+    setConfirmPassword('');
+    setUserId('');
+    console.log('reset');
+  }
+
+  const handleButtonEdit = (e, user) => {
+    e.preventDefault();
+    setShowModalEdit(true);
+    setEmail(user.email);
+    setFullname(user.user_name);
+    setUserId(user.user_id);
+  }
+  const handleButtonDelete = (e, user) => {
+    e.preventDefault();
+    setShowModalDelete(true)
+    setUserId(user.user_id);
   }
 
   useEffect(() => {
-    console.log(fullname);
-    console.log(email);
-    console.log(password);
-    console.log(confirmPassword);
-});
+    getAllUser(token)
+      .then( data => {
+        setUsers(data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+}, []);
 
   return (
     <Card>
@@ -114,6 +237,7 @@ export default function CardTable() {
         </Button>
         </div>
       </CardHeader>
+      {users.length === 0  && <LinearProgress />}
       <CardBody>
         <div className="overflow-x-auto">
           <table className="items-center w-full bg-transparent border-collapse">
@@ -131,12 +255,13 @@ export default function CardTable() {
               </tr>
             </thead>
             <tbody>
-              <tr>
+            {users.map(user => (
+              <tr key={user.user_id}>
                 <th className="border-b border-gray-200 align-middle font-light text-sm whitespace-nowrap px-2 py-4 text-left">
-                  Eka Rahadi
+                  {user.user_name}
                 </th>
                 <th className="border-b border-gray-200 align-middle font-light text-sm whitespace-nowrap px-2 py-4 text-left">
-                  ekarahadi98@gmail.com
+                  {user.email}
                 </th>
                 <th className="border-b border-gray-200 align-middle font-light text-sm whitespace-nowrap px-2 py-4 text-left">
                   <div className="flex flex-wrap">
@@ -149,7 +274,7 @@ export default function CardTable() {
                       block={false}
                       iconOnly={false}
                       ripple="light"
-                      onClick={(e) => setShowModalEdit(true)}
+                      onClick={(e) => handleButtonEdit(e, user)}
                     >
                         Edit
                     </Button>
@@ -161,50 +286,14 @@ export default function CardTable() {
                       block={false}
                       iconOnly={false}
                       ripple="light"
-                      onClick={(e) => setShowModalDelete(true)}
+                      onClick={(e) => handleButtonDelete(e, user)}
                     >
                         Delete
                     </Button>
                   </div>
                 </th>
               </tr>
-              <tr>
-                <th className="border-b border-gray-200 align-middle font-light text-sm whitespace-nowrap px-2 py-4 text-left">
-                  Eka Rahadi
-                </th>
-                <th className="border-b border-gray-200 align-middle font-light text-sm whitespace-nowrap px-2 py-4 text-left">
-                  ekarahadi16@gmail.com
-                </th>
-                <th className="border-b border-gray-200 align-middle font-light text-sm whitespace-nowrap px-2 py-4 text-left">
-                <div className="flex flex-wrap">
-                  <Button
-                      className="mr-2"
-                      color="orange"
-                      buttonType="filled"
-                      size="regular"
-                      rounded={false}
-                      block={false}
-                      iconOnly={false}
-                      ripple="light"
-                      onClick={(e) => setShowModalEdit(true)}
-                    >
-                        Edit
-                    </Button>
-                    <Button
-                      color="red"
-                      buttonType="filled"
-                      size="regular"
-                      rounded={false}
-                      block={false}
-                      iconOnly={false}
-                      ripple="light"
-                      onClick={(e) => setShowModalDelete(true)}
-                    >
-                        Delete
-                    </Button>
-                  </div>
-                </th>
-              </tr>
+            ))}
             </tbody>
           </table>
         </div>
@@ -212,7 +301,11 @@ export default function CardTable() {
 
       {/* MODAL EDIT */}
       <Modal size="regular" active={showModalEdit}>
-        <ModalHeader toggler={!disabled ? () => setShowModalEdit(false): null}>
+        <ModalHeader toggler={!disabled ? () => {
+          resetState();
+          setShowModalEdit(false);
+          }
+          : null}>
           Edit User Information
         </ModalHeader>
         <ModalBody>
@@ -221,6 +314,7 @@ export default function CardTable() {
                   <div className="flex flex-wrap mt-10">
                       <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
+                              value={fullname}
                               onChange={(e) => handleFullName(e)}
                               type="text"
                               color="purple"
@@ -229,6 +323,7 @@ export default function CardTable() {
                       </div>
                       <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
                           <Input
+                              value={email}
                               onChange={(e) => handleEmail(e)}
                               type="email"
                               color="purple"
@@ -237,6 +332,7 @@ export default function CardTable() {
                       </div>
                       <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
+                              value={password}
                               onChange={(e) => handlePassword(e)}
                               type="password"
                               color="purple"
@@ -245,6 +341,7 @@ export default function CardTable() {
                       </div>
                       <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
                           <Input
+                              value={confirmPassword}
                               onChange={(e) => handleConfirmPassword(e)}
                               type="password"
                               color="purple"
@@ -259,7 +356,11 @@ export default function CardTable() {
               disabled={disabled}
               color="red"
               buttonType="link"
-              onClick={(e) => setShowModalEdit(false)}
+              onClick={(e) => {
+                resetState();
+                setShowModalEdit(false);
+                }
+              }
               ripple="dark"
             >
               Close
@@ -344,7 +445,11 @@ export default function CardTable() {
 
         {/* MODAL DELETE */}
           <Modal size="sm" active={showModalDelete}>
-              <ModalHeader toggler={() => setShowModalDelete(false)}>
+              <ModalHeader toggler={() => {
+                resetState();
+                setShowModalDelete(false);
+                }
+              }>
                       Delete User
               </ModalHeader>
               {loadingBar && <LinearProgress />}

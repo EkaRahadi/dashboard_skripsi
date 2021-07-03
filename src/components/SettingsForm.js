@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import Card from '@material-tailwind/react/Card';
 import CardHeader from '@material-tailwind/react/CardHeader';
 import CardBody from '@material-tailwind/react/CardBody';
@@ -7,6 +8,8 @@ import Input from '@material-tailwind/react/Input';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import { userProfile } from '../store/index';
+import { updateUser, getUser } from '../api/authApi';
 
 export default function SettingsForm() {
     const [fullname, setFullname] = useState('');
@@ -18,6 +21,9 @@ export default function SettingsForm() {
     const [snackBar, setSnackBar] = useState(false);
     const [severityAlert, setSeverityAlert] = useState('success');
     const [alertMsg, setAlertMsg] = useState('Data successfully saved!')
+
+    const user = useRecoilValue(userProfile);
+    const setUser = useSetRecoilState(userProfile);
 
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -40,16 +46,49 @@ export default function SettingsForm() {
         setConfirmPassword(e.target.value);
     };
     const handleSave = (e) => {
+        e.preventDefault();
+        if (password !== confirmPassword || password === '' || confirmPassword === '') {
+            setAlertMsg('Password and Confirm Password not match !')
+            setSeverityAlert('error');
+            setSnackBar(true);
+            return;
+        }
         setLoadingBar(true);
         setDisabled(true);
 
-        setTimeout(() => {
-            setAlertMsg('Data failed to save!')
-            setSeverityAlert('error');
-            setLoadingBar(false);
-            setDisabled(false);
-            setSnackBar(true)
-        }, 3000)
+        const token = window.localStorage.getItem('token');
+        const payload = {
+            userId: user.user_id,
+            email: email,
+            password: password,
+            name: fullname
+        }
+
+        updateUser(payload, token)
+            .then(data => {
+                setAlertMsg('Data successfully saved!')
+                setSeverityAlert('success');
+
+                getUser(payload, token)
+                .then(data => {
+                    setUser(data.data[0]);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+            })
+            .catch(error => {
+                console.log(error);
+                setAlertMsg('Data failed to save!')
+                setSeverityAlert('error');
+            })
+            .finally(() => {
+                setLoadingBar(false);
+                setDisabled(false);
+                setSnackBar(true);
+                setPassword('');
+                setConfirmPassword('');
+            })
     };
 
     const handleClose = (event, reason) => {
@@ -61,11 +100,9 @@ export default function SettingsForm() {
       };
 
     useEffect(() => {
-        console.log(fullname);
-        console.log(email);
-        console.log(password);
-        console.log(confirmPassword);
-    });
+        setFullname(user.user_name);
+        setEmail(user.email);
+    },[user]);
 
     return (
         <Card>
@@ -96,6 +133,7 @@ export default function SettingsForm() {
                                 type="text"
                                 color="purple"
                                 placeholder="Full Name"
+                                value={fullname}
                             />
                         </div>
                         <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
@@ -105,6 +143,7 @@ export default function SettingsForm() {
                                 type="email"
                                 color="purple"
                                 placeholder="Email Address"
+                                value={email}
                             />
                         </div>
                         <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
@@ -114,6 +153,7 @@ export default function SettingsForm() {
                                 type="password"
                                 color="purple"
                                 placeholder="Password"
+                                value={password}
                             />
                         </div>
                         <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
@@ -123,6 +163,7 @@ export default function SettingsForm() {
                                 type="password"
                                 color="purple"
                                 placeholder="Password Confirm"
+                                value={confirmPassword}
                             />
                         </div>
                     </div>
