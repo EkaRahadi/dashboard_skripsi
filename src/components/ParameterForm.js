@@ -1,27 +1,24 @@
 import React, {useState, useEffect} from 'react';
-import { useSetRecoilState } from "recoil";
-import { resultCost } from "../store/index"
 import Card from '@material-tailwind/react/Card';
 import CardHeader from '@material-tailwind/react/CardHeader';
 import CardBody from '@material-tailwind/react/CardBody';
 import Button from '@material-tailwind/react/Button';
 import Input from '@material-tailwind/react/Input';
+import Radio from "@material-tailwind/react/radio";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { estimastion } from '../api/authApi';
 
-export default function EstimationForm() {
+export default function ParameterForm() {
     const [param1, setParam1] = useState('');
     const [param2, setParam2] = useState('');
     const [param3, setParam3] = useState('');
+    const [algorithm, setAlgorithm] = useState('');
     const [disabled, setDisabled] = useState(false);
     const [loadingBar, setLoadingBar] = useState(false);
     const [snackBar, setSnackBar] = useState(false);
     const [severityAlert, setSeverityAlert] = useState('success');
-    const [alertMsg, setAlertMsg] = useState('Estimation Success!');
-
-    const setResultCost = useSetRecoilState(resultCost);
+    const [alertMsg, setAlertMsg] = useState('Estimation Success!')
 
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -39,6 +36,9 @@ export default function EstimationForm() {
         e.preventDefault();
         setParam3(e.target.value);
     };
+    const handleRadio = (e) => {
+        setAlgorithm(e.target.value);
+    };
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -49,37 +49,29 @@ export default function EstimationForm() {
       };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
         setLoadingBar(true);
         setDisabled(true);
 
-        setTimeout(() => {
-        }, 3000)
         const payload = {
-            loc: param1,
-            em: param2,
-            umr: param3,
-          }
-        
-        estimastion(payload)
-          .then(data => {
-              const result = data.data;
-              setResultCost(<><p>Your software approximately needs <b>{result.TDEV} months</b> time development, with <b>{result.num_of_staff} employee</b> and <b>Rp.{result.monthly_cost} monthly cost</b>. <br></br><b>Total Cost Rp.{result.total_cost}</b></p></>);
-              setAlertMsg('Estimation Success !');
-              setSeverityAlert('success');
-          })
-          .catch(err => {
-              setAlertMsg('Estimation Failed !');
-              setSeverityAlert('error');
-          })
-          .finally(() => {
-              setLoadingBar(false);
-              setDisabled(false);
-              setSnackBar(true);
-          })
+            nPopulation: param1,
+            nDimension: param2,
+            nIteration: param3,
+        }
+
+        setTimeout(() => {
+            setAlertMsg('Estimation Failed!')
+            setSeverityAlert('error');
+            setLoadingBar(false);
+            setDisabled(false);
+            setSnackBar(true)
+        }, 3000)
     };
     
     useEffect(() => {
+        console.log(param1);
+        console.log(param2);
+        console.log(param3);
+        console.log(algorithm);
       });
     return (
         <Card>
@@ -101,7 +93,7 @@ export default function EstimationForm() {
                                 onChange={(e) => handleParam1(e)}
                                 type="number"
                                 color="purple"
-                                placeholder="LOC / KSLOC"
+                                placeholder="Number Population"
                             />
                         </div>
                         <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
@@ -110,21 +102,90 @@ export default function EstimationForm() {
                                 onChange={(e) => handleParam2(e)}
                                 type="number"
                                 color="purple"
-                                placeholder="Effort Multiplier"
+                                placeholder="Number of Dimension"
                             />
                         </div>
-                        <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
+                        <div className="w-full lg:w-6/12 pr-4 mb-5 font-light">
                             <Input
                                 disabled={disabled}
                                 onChange={(e) => handleParam3(e)}
                                 type="number"
                                 color="purple"
-                                placeholder="UMR"
+                                placeholder="Max Iteration"
                             />
                         </div>
                     </div>
+
+                    <div className="w-full flex flex-wrap justify-center py-4 lg:pt-4 pt-8">
+                    <div className="p-2 text-center w-full lg:w-auto">
+                    {disabled ? 
+                        <Radio
+                        disabled
+                        onChange={(e) => handleRadio(e)}
+                        color="lightBlue"
+                        text="Bat Algorithm"
+                        id="bat"
+                        name="algorithm"
+                        value="bat"
+                        />
+                    :
+                    <Radio
+                        onChange={(e) => handleRadio(e)}
+                        color="lightBlue"
+                        text="Bat Algorithm"
+                        id="bat"
+                        name="algorithm"
+                        value="bat"
+                        />
+                    }
+                    </div>
+                    <div className="p-2 text-center w-full lg:w-auto">
+                    {disabled ? 
+                        <Radio
+                        disabled
+                        onChange={(e) => handleRadio(e)}
+                        color="lightBlue"
+                        text="FPA Algorithm"
+                        id="fpa"
+                        name="algorithm"
+                        value="fpa"
+                        />
+                    :
+                        <Radio
+                        onChange={(e) => handleRadio(e)}
+                        color="lightBlue"
+                        text="FPA Algorithm"
+                        id="fpa"
+                        name="algorithm"
+                        value="fpa"
+                        />
+                    }
+                    </div>
+                    <div className="p-2 text-center w-full lg:w-auto">
+                    {disabled ?
+                        <Radio
+                        disabled
+                        onChange={(e) => handleRadio(e)}
+                        color="lightBlue"
+                        text="Hybrid Algorithm"
+                        id="hybrid"
+                        name="algorithm"
+                        value="hybrid"
+                        />
+                    :
+                        <Radio
+                        onChange={(e) => handleRadio(e)}
+                        color="lightBlue"
+                        text="Hybrid Algorithm"
+                        id="hybrid"
+                        name="algorithm"
+                        value="hybrid"
+                        />
+                    }
+                    </div>
+                </div>
                 </form>
-                <div className="flex flex-wrap mt-10 font-light">
+                <div className="flex flex-wrap mt-2 font-light">
                         <Button
                         onClick={(e) => handleSubmit(e)}
                         className="mx-auto"

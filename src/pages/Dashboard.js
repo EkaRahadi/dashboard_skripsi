@@ -1,4 +1,4 @@
-import EstimationForm from 'components/EstimationForm';
+import ParameterForm from 'components/ParameterForm';
 import ResultCard from 'components/ResultCard';
 import Sidebar from "components/Sidebar";
 import { withRouter } from "react-router-dom";
@@ -13,7 +13,7 @@ function Dashboard() {
                 <div className="container mx-auto max-w-full">
                     <div className="grid grid-cols-1 xl:grid-cols-6">
                         <div className="xl:col-start-1 xl:col-end-5 px-4 mb-16">
-                            <EstimationForm />
+                            <ParameterForm />
                         </div>
                         <div className="xl:col-start-5 xl:col-end-7 px-4 mb-16 mt-14">
                             <ResultCard />

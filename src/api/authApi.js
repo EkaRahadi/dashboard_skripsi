@@ -170,3 +170,140 @@ export const deleteUser = (payload, token) => {
             });
     });
 }
+
+// Estimation
+export const estimastion = (payload) => {
+    const params = new URLSearchParams();
+    const { loc, em, umr } = payload;
+    params.append('loc', loc);
+    params.append('em', em);
+    params.append('umr', umr);
+
+    return new Promise((resolve, reject) => {
+        axios
+            .post(API_BASE_URL + `/estimation`, params, {
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error);
+                reject(error);
+            });
+    });
+}
+
+// Parameter
+export const addParameter = (payload, token) => {
+    const params = new URLSearchParams();
+    const { paramA, paramB, paramC, paramD } = payload;
+    params.append('param_a', paramA);
+    params.append('param_b', paramB);
+    params.append('param_c', paramC);
+    params.append('param_d', paramD);
+
+    return new Promise((resolve, reject) => {
+        axios
+            .post(API_BASE_URL + `/parameters`, params, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error);
+                reject(error);
+            });
+    });
+}
+
+export const updateParameter = (payload, token) => {
+    const params = new URLSearchParams();
+    const { paramA, paramB, paramC, paramD, paramId, defaultParam } = payload;
+    params.append('param_a', paramA);
+    params.append('param_b', paramB);
+    params.append('param_c', paramC);
+    params.append('param_d', paramD);
+    params.append('default', defaultParam);
+
+    return new Promise((resolve, reject) => {
+        axios
+            .put(API_BASE_URL + `/parameters/${paramId}`, params, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error);
+                reject(error);
+            });
+    });
+}
+
+export const setDefaultParam = (payload, token) => {
+    const { paramId } = payload;
+
+    return new Promise((resolve, reject) => {
+        axios
+            .put(API_BASE_URL + `/parameters/default/${paramId}`, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error.response);
+                reject(error);
+            });
+    });
+}
+
+export const getAllParameter = (token) => {
+    return new Promise((resolve, reject) => {
+        axios
+            .get(API_BASE_URL + `/parameters`, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error.response);
+                reject(error);
+            });
+    });
+}
+
+export const deleteParameter = (payload, token) => {
+    const { paramId } = payload;
+    return new Promise((resolve, reject) => {
+        axios
+            .delete(API_BASE_URL + `/parameters/${paramId}`, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error.response);
+                reject(error);
+            });
+    });
+}

@@ -13,3 +13,13 @@ export const userList = atom({
     key: 'userList',
     default: [],
 });
+
+export const resultCost = atom({
+    key: 'resultCost',
+    default: ``
+})
+
+export const parameterList = atom({
+    key: 'userList',
+    default: [],
+});

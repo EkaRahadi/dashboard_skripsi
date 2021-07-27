@@ -5,6 +5,7 @@ import Settings from "pages/Settings";
 import Tables from "pages/Tables";
 import Login from "pages/Login";
 import LandingPage from "pages/LandingPage";
+import Parameter from "pages/Parameter";
 import ProtectedRoute from "components/route/ProtectedRoute";
 
 // Tailwind CSS Style Sheet
@@ -21,6 +22,7 @@ function App() {
           <ProtectedRoute exact path="/settings" component={Settings} isAuth={ token ? true : false } />
           <ProtectedRoute exact path="/users" component={Tables} isAuth={ token ? true : false } />
           <ProtectedRoute exact path="/dashboard" component={Dashboard} isAuth={ token ? true : false } />
+          <ProtectedRoute exact path="/parameters" component={Parameter} isAuth={ token ? true : false } />
           <Redirect from="*" to="/" />
         </Switch>
     </>
