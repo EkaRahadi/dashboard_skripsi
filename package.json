@@ -1,9 +1,8 @@
 {
   "name": "material-tailwind-dashboard-react",
   "version": "1.1.0",
-  "homepage": "https://www.ekarahadi.me/",
   "private": true,
-  "homepage": "https://demos.creative-tim.com/material-tailwind-dashboard-react/#/",
+  "homepage": ".",
   "dependencies": {
     "@material-tailwind/react": "^0.3.4",
     "@material-ui/core": "^4.11.4",
