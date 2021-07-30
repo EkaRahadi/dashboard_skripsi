@@ -1,6 +1,7 @@
 {
   "name": "material-tailwind-dashboard-react",
   "version": "1.1.0",
+  "homepage": "https://www.ekarahadi.me/",
   "private": true,
   "homepage": "https://demos.creative-tim.com/material-tailwind-dashboard-react/#/",
   "dependencies": {
@@ -28,7 +29,7 @@
     "watch:tailwind": "postcss ./src/assets/styles/index.css -o ./src/assets/styles/tailwind.css -w",
     "start:react": "react-scripts start",
     "start": "npm-run-all -p watch:tailwind start:react",
-    "build": "npm run build:tailwind && CI=false && react-scripts build",
+    "build": "npm run build:tailwind && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "npm:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
