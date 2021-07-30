@@ -20,7 +20,7 @@ export const resultCost = atom({
 })
 
 export const parameterList = atom({
-    key: 'userList',
+    key: 'parameterList',
     default: [],
 });
 
