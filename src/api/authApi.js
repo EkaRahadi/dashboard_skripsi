@@ -307,3 +307,48 @@ export const deleteParameter = (payload, token) => {
             });
     });
 }
+
+export const getAllDataset = (page, token) => {
+    return new Promise((resolve, reject) => {
+        axios
+            .get(API_BASE_URL + `/datasets/${page}`, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error.response);
+                reject(error);
+            });
+    });
+}
+
+// Estimation Parameter
+export const estimastionParameter = (payload, token) => {
+    const params = new URLSearchParams();
+    const { nPopulation, nIteration, algorithm } = payload;
+    params.append('n_population', nPopulation);
+    params.append('max_iteration', nIteration);
+    params.append('algorithm', algorithm);
+
+    return new Promise((resolve, reject) => {
+        axios
+            .post(API_BASE_URL + `/estimation-parameter`, params, {
+                headers: {
+                    'x-access-token': token,
+                },
+            })
+            .then((response) => {
+                const { data } = response ;
+                resolve(data);
+            })
+            .catch((error) => {
+                console.log(error);
+                reject(error);
+            });
+    });
+}

@@ -23,3 +23,13 @@ export const parameterList = atom({
     key: 'userList',
     default: [],
 });
+
+export const datasetList = atom({
+    key: 'datasetList',
+    default: [],
+});
+
+export const resultParameter = atom({
+    key: 'resultParameter',
+    default: ``,
+});

@@ -2,8 +2,11 @@ import ParameterForm from 'components/ParameterForm';
 import ResultCard from 'components/ResultCard';
 import Sidebar from "components/Sidebar";
 import { withRouter } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { resultParameter } from "../store/index"
 
 function Dashboard() {
+    const param = useRecoilValue(resultParameter);
     return (
         <>
         <Sidebar/>
@@ -16,7 +19,7 @@ function Dashboard() {
                             <ParameterForm />
                         </div>
                         <div className="xl:col-start-5 xl:col-end-7 px-4 mb-16 mt-14">
-                            <ResultCard />
+                            <ResultCard data={param} />
                         </div>
                     </div>
                 </div>

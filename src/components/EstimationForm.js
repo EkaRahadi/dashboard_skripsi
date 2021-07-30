@@ -53,8 +53,6 @@ export default function EstimationForm() {
         setLoadingBar(true);
         setDisabled(true);
 
-        setTimeout(() => {
-        }, 3000)
         const payload = {
             loc: param1,
             em: param2,

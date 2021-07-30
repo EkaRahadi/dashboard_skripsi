@@ -1,4 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
+import { useSetRecoilState } from "recoil";
+import { resultParameter } from "../store/index"
 import Card from '@material-tailwind/react/Card';
 import CardHeader from '@material-tailwind/react/CardHeader';
 import CardBody from '@material-tailwind/react/CardBody';
@@ -8,17 +10,20 @@ import Radio from "@material-tailwind/react/radio";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import { estimastionParameter } from '../api/authApi';
 
 export default function ParameterForm() {
-    const [param1, setParam1] = useState('');
-    const [param2, setParam2] = useState('');
-    const [param3, setParam3] = useState('');
+    const [param1, setParam1] = useState(1);
+    const [param2, setParam2] = useState(10);
     const [algorithm, setAlgorithm] = useState('');
     const [disabled, setDisabled] = useState(false);
     const [loadingBar, setLoadingBar] = useState(false);
     const [snackBar, setSnackBar] = useState(false);
     const [severityAlert, setSeverityAlert] = useState('success');
-    const [alertMsg, setAlertMsg] = useState('Estimation Success!')
+    const [alertMsg, setAlertMsg] = useState('Estimation Success!');
+
+    const setDataParameter = useSetRecoilState(resultParameter);
+    const token = window.localStorage.getItem("token");
 
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -31,10 +36,6 @@ export default function ParameterForm() {
     const handleParam2 = (e) => {
         e.preventDefault();
         setParam2(e.target.value);
-    };
-    const handleParam3 = (e) => {
-        e.preventDefault();
-        setParam3(e.target.value);
     };
     const handleRadio = (e) => {
         setAlgorithm(e.target.value);
@@ -49,30 +50,47 @@ export default function ParameterForm() {
       };
 
     const handleSubmit = (e) => {
+        if (algorithm === '') {
+            setAlertMsg('You should coose one algorithm !');
+            setSeverityAlert('error');
+            setSnackBar(true);
+            return;
+        }
+        if (!Number.isInteger(param1) || !Number.isInteger(param2)) {
+            setAlertMsg('The input must integer !');
+            setSeverityAlert('error');
+            setSnackBar(true);
+            return;
+        }
+        e.preventDefault();
         setLoadingBar(true);
         setDisabled(true);
 
         const payload = {
             nPopulation: param1,
-            nDimension: param2,
-            nIteration: param3,
+            nIteration: param2,
+            algorithm: algorithm,
         }
 
-        setTimeout(() => {
-            setAlertMsg('Estimation Failed!')
-            setSeverityAlert('error');
-            setLoadingBar(false);
-            setDisabled(false);
-            setSnackBar(true)
-        }, 3000)
+        estimastionParameter(payload, token)
+            .then(data => {
+                const result = data.data;
+                console.log(result);
+                setDataParameter(<><p>The optimal parameters are <b>A: {result.parameter[0]}</b>, <b>B: {result.parameter[1]}</b>, <b>C: {result.parameter[2]}</b>, <b>D: {result.parameter[3]}</b> with value <b>MMRE TDEV: {result.mmre_tdev}</b> and <b>MMRE EFFORT: {result.mmre_effort}</b> </p></>)
+                setAlertMsg('Estimation Parameter Success !');
+                setSeverityAlert('success');
+            })
+            .catch(err => {
+                setAlertMsg('Estimation Parameter Failed !');
+                setSeverityAlert('error');
+            })
+            .finally(() => {
+                setLoadingBar(false);
+                setDisabled(false);
+                setSnackBar(true);
+            })
     };
-    
-    useEffect(() => {
-        console.log(param1);
-        console.log(param2);
-        console.log(param3);
-        console.log(algorithm);
-      });
+
     return (
         <Card>
             <CardHeader color="purple" contentPosition="none">
@@ -96,19 +114,10 @@ export default function ParameterForm() {
                                 placeholder="Number Population"
                             />
                         </div>
-                        <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
-                            <Input
-                                disabled={disabled}
-                                onChange={(e) => handleParam2(e)}
-                                type="number"
-                                color="purple"
-                                placeholder="Number of Dimension"
-                            />
-                        </div>
                         <div className="w-full lg:w-6/12 pr-4 mb-5 font-light">
                             <Input
                                 disabled={disabled}
-                                onChange={(e) => handleParam3(e)}
+                                onChange={(e) => handleParam2(e)}
                                 type="number"
                                 color="purple"
                                 placeholder="Max Iteration"
