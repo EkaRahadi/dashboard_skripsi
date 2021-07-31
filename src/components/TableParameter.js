@@ -450,7 +450,10 @@ export default function CardTable() {
 
         {/* MODAL ADD */}
       <Modal size="regular" active={showModalAdd}>
-        <ModalHeader toggler={!disabled ? () => setShowModalAdd(false): null}>
+        <ModalHeader toggler={!disabled ? () => {
+          resetState();
+          setShowModalAdd(false); 
+          }: null}>
           Add Parameter
         </ModalHeader>
         <ModalBody>
@@ -459,6 +462,7 @@ export default function CardTable() {
                   <div className="flex flex-wrap mt-10">
                       <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
+                              value={paramA}
                               onChange={(e) => handleParamA(e)}
                               type="number"
                               color="purple"
@@ -467,6 +471,7 @@ export default function CardTable() {
                       </div>
                       <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
+                              value={paramB}
                               onChange={(e) => handleParamB(e)}
                               type="number"
                               color="purple"
@@ -475,6 +480,7 @@ export default function CardTable() {
                       </div>
                       <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
+                              value={paramC}
                               onChange={(e) => handleParamC(e)}
                               type="number"
                               color="purple"
@@ -483,6 +489,7 @@ export default function CardTable() {
                       </div>
                       <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
+                              value={paramD}
                               onChange={(e) => handleParamD(e)}
                               type="number"
                               color="purple"
@@ -497,7 +504,10 @@ export default function CardTable() {
               disabled={disabled}
               color="red"
               buttonType="link"
-              onClick={(e) => setShowModalAdd(false)}
+              onClick={(e) => {
+                resetState();
+                setShowModalAdd(false);
+                }}
               ripple="dark"
             >
               Close

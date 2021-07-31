@@ -561,6 +561,9 @@ video {
 .z-10{
 	z-index: 10;
 }
+.m-4{
+	margin: 1rem;
+}
 .mx-auto{
 	margin-left: auto;
 	margin-right: auto;
@@ -852,9 +855,6 @@ video {
 }
 .pt-8{
 	padding-top: 2rem;
-}
-.pl-4{
-	padding-left: 1rem;
 }
 .pt-14{
 	padding-top: 3.5rem;

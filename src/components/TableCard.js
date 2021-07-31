@@ -391,7 +391,10 @@ export default function CardTable() {
 
         {/* MODAL ADD */}
       <Modal size="regular" active={showModalAdd}>
-        <ModalHeader toggler={!disabled ? () => setShowModalAdd(false): null}>
+        <ModalHeader toggler={!disabled ? () => {
+          resetState();
+          setShowModalAdd(false);
+          } : null}>
           Add User
         </ModalHeader>
         <ModalBody>
@@ -443,7 +446,8 @@ export default function CardTable() {
               color="red"
               buttonType="link"
               onClick={(e) => {
-                setShowModalAdd(false)}}
+                resetState();
+                setShowModalAdd(false);}}
               ripple="dark"
             >
               Close
