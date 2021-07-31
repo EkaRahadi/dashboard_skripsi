@@ -229,6 +229,7 @@ export const updateParameter = (payload, token) => {
     params.append('param_c', paramC);
     params.append('param_d', paramD);
     params.append('default', defaultParam);
+    console.log(params);
 
     return new Promise((resolve, reject) => {
         axios

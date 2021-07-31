@@ -22,6 +22,7 @@ export default function CardTable() {
   const [paramB, setParamB] = useState('');
   const [paramC, setParamC] = useState('');
   const [paramD, setParamD] = useState('');
+  const [paramDefault, setparamDefault] = useState(false);
   const [paramId, setParamId] = useState('');
   const [loadingBar, setLoadingBar] = useState(false);
   const [loadingSetDefault, setLoadingSetDefault] = useState(false);
@@ -112,16 +113,12 @@ export default function CardTable() {
       paramB: parseFloat(paramB),
       paramC: parseFloat(paramC),
       paramD: parseFloat(paramD),
-      defaultParam: false,
+      defaultParam: paramDefault,
       paramId: paramId
     }
 
-
-    console.log(payload);
-
     updateParameter(payload, token)
       .then(data => {
-        console.log(data);
         setAlertMsg('Action Success !')
         setSeverityAlert('success');
 
@@ -189,6 +186,7 @@ export default function CardTable() {
     setParamC('');
     setParamD('');
     setParamId('');
+    setDefaultParam(false);
     console.log('reset');
   }
 
@@ -199,6 +197,7 @@ export default function CardTable() {
     setParamB(parameter.param_b);
     setParamC(parameter.param_c);
     setParamD(parameter.param_d);
+    setDefaultParam(parameter.default);
     setParamId(parameter._id);
   }
   const handleButtonDelete = (e, parameter) => {
@@ -393,7 +392,7 @@ export default function CardTable() {
                               placeholder="Parameter A"
                           />
                       </div>
-                      <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                      <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
                               value={paramB}
                               onChange={(e) => handleParamB(e)}
@@ -411,7 +410,7 @@ export default function CardTable() {
                               placeholder="Parameter C"
                           />
                       </div>
-                      <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                      <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
                               value={paramD}
                               onChange={(e) => handleParamD(e)}
@@ -466,7 +465,7 @@ export default function CardTable() {
                               placeholder="Parameter A"
                           />
                       </div>
-                      <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                      <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
                               onChange={(e) => handleParamB(e)}
                               type="number"
@@ -482,7 +481,7 @@ export default function CardTable() {
                               placeholder="Parameter C"
                           />
                       </div>
-                      <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                      <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
                               onChange={(e) => handleParamD(e)}
                               type="number"

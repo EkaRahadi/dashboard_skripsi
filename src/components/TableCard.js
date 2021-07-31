@@ -102,6 +102,7 @@ export default function CardTable() {
         setShowModalEdit(false);
         setDisabled(false);
         setShowModalAdd(false);
+        resetState();
       })
   };
   const handleModalEditSave = (e) => {
@@ -126,7 +127,6 @@ export default function CardTable() {
       payload['password'] = password
     }
 
-    console.log(payload);
 
     updateUser(payload, token)
       .then(data => {
@@ -278,7 +278,7 @@ export default function CardTable() {
                 <th className="border-b border-gray-200 align-middle font-light text-sm whitespace-nowrap px-2 py-4 text-left">
                   <div className="flex flex-wrap">
                   <Button
-                      className="mr-2"
+                      className="mr-2 mb-2"
                       color="orange"
                       buttonType="filled"
                       size="regular"
@@ -333,7 +333,7 @@ export default function CardTable() {
                               placeholder="Full Name"
                           />
                       </div>
-                      <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                      <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
                               value={email}
                               onChange={(e) => handleEmail(e)}
@@ -351,7 +351,7 @@ export default function CardTable() {
                               placeholder="Password"
                           />
                       </div>
-                      <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                      <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
                               value={confirmPassword}
                               onChange={(e) => handleConfirmPassword(e)}
@@ -400,14 +400,16 @@ export default function CardTable() {
                   <div className="flex flex-wrap mt-10">
                       <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
+                              value={fullname}
                               onChange={(e) => handleFullName(e)}
                               type="text"
                               color="purple"
                               placeholder="Full Name"
                           />
                       </div>
-                      <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                      <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
+                              value={email}
                               onChange={(e) => handleEmail(e)}
                               type="email"
                               color="purple"
@@ -416,14 +418,16 @@ export default function CardTable() {
                       </div>
                       <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
+                              value={password}
                               onChange={(e) => handlePassword(e)}
                               type="password"
                               color="purple"
                               placeholder="Password"
                           />
                       </div>
-                      <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                      <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                           <Input
+                              value={confirmPassword}
                               onChange={(e) => handleConfirmPassword(e)}
                               type="password"
                               color="purple"
@@ -438,7 +442,8 @@ export default function CardTable() {
               disabled={disabled}
               color="red"
               buttonType="link"
-              onClick={(e) => setShowModalAdd(false)}
+              onClick={(e) => {
+                setShowModalAdd(false)}}
               ripple="dark"
             >
               Close
@@ -447,7 +452,8 @@ export default function CardTable() {
             <Button
               disabled={disabled}
               color="green"
-              onClick={(e) => handleModalAddSave(e)}
+              onClick={(e) => {
+                handleModalAddSave(e)}}
               ripple="light"
             >
               Add User

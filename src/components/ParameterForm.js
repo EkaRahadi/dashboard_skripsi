@@ -56,19 +56,14 @@ export default function ParameterForm() {
             setSnackBar(true);
             return;
         }
-        if (!Number.isInteger(param1) || !Number.isInteger(param2)) {
-            setAlertMsg('The input must integer !');
-            setSeverityAlert('error');
-            setSnackBar(true);
-            return;
-        }
+
         e.preventDefault();
         setLoadingBar(true);
         setDisabled(true);
 
         const payload = {
-            nPopulation: param1,
-            nIteration: param2,
+            nPopulation: parseInt(param1),
+            nIteration: parseInt(param2),
             algorithm: algorithm,
         }
 

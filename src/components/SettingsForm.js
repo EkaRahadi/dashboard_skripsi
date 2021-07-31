@@ -139,7 +139,7 @@ export default function SettingsForm() {
                                 value={fullname}
                             />
                         </div>
-                        <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                        <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                             <Input
                                 disabled={disabled}
                                 onChange={(e) => handleEmail(e)}
@@ -159,7 +159,7 @@ export default function SettingsForm() {
                                 value={password}
                             />
                         </div>
-                        <div className="w-full lg:w-6/12 pl-4 mb-10 font-light">
+                        <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                             <Input
                                 disabled={disabled}
                                 onChange={(e) => handleConfirmPassword(e)}

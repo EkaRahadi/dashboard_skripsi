@@ -186,8 +186,8 @@ export default function CardTable() {
           </table>
         </div>
       </CardBody>
-      <div className="flex justify-end">
-        <Pagination count={maxPage} page={page} onChange={handleChange} color="primary" />
+      <div className="flex justify-end m-4">
+        <Pagination count={maxPage} page={page} onChange={handleChange} color="primary" size="small" />
       </div>
     </Card>
     
