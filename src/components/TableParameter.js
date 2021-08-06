@@ -105,6 +105,13 @@ export default function CardTable() {
   const handleModalEditSave = (e) => {
     e.preventDefault();
 
+    if (paramA === '' || paramB === '' || paramC === '' || paramD === '') {
+      setAlertMsg('Action Failed !')
+      setSeverityAlert('error');
+      setSnackBar(true);
+      return;
+    }
+
     setLoadingBar(true)
     setDisabled(true);
 
