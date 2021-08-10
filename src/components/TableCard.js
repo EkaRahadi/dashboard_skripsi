@@ -63,6 +63,12 @@ export default function CardTable() {
   };
   const handleModalAddSave = (e) => {
     e.preventDefault();
+    if (fullname === '' || email === '' || password === '' || confirmPassword === '') {
+      setAlertMsg('All field are required !')
+      setSeverityAlert('error');
+      setSnackBar(true);
+      return;
+    }
     if (password !== confirmPassword) {
       setAlertMsg('Password and Confirm Password not match !')
       setSeverityAlert('error');
@@ -107,6 +113,12 @@ export default function CardTable() {
   };
   const handleModalEditSave = (e) => {
     e.preventDefault();
+    if (fullname === '' || email === '') {
+      setAlertMsg('Fullname and email are required !')
+      setSeverityAlert('error');
+      setSnackBar(true);
+      return;
+    }
     if (password !== confirmPassword) {
       setAlertMsg('Password and Confirm Password not match !')
       setSeverityAlert('error');

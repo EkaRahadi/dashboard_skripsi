@@ -65,6 +65,12 @@ export default function CardTable() {
   };
   const handleModalAddSave = (e) => {
     e.preventDefault();
+    if (paramA === '' || paramB === '' || paramC === '' || paramD === '') {
+      setAlertMsg('All fields are required !')
+      setSeverityAlert('error');
+      setSnackBar(true);
+      return;
+    }
 
     setLoadingBar(true)
     setDisabled(true);
@@ -106,7 +112,7 @@ export default function CardTable() {
     e.preventDefault();
 
     if (paramA === '' || paramB === '' || paramC === '' || paramD === '') {
-      setAlertMsg('Action Failed !')
+      setAlertMsg('All fields are required!')
       setSeverityAlert('error');
       setSnackBar(true);
       return;
@@ -193,7 +199,7 @@ export default function CardTable() {
     setParamC('');
     setParamD('');
     setParamId('');
-    setDefaultParam(false);
+    setparamDefault(false);
     console.log('reset');
   }
 
@@ -204,7 +210,7 @@ export default function CardTable() {
     setParamB(parameter.param_b);
     setParamC(parameter.param_c);
     setParamD(parameter.param_d);
-    setDefaultParam(parameter.default);
+    setparamDefault(parameter.default);
     setParamId(parameter._id);
   }
   const handleButtonDelete = (e, parameter) => {
