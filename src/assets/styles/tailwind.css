@@ -572,6 +572,10 @@ video {
 	margin-top: 1rem;
 	margin-bottom: 1rem;
 }
+.mx-5{
+	margin-left: 1.25rem;
+	margin-right: 1.25rem;
+}
 .mt-1{
 	margin-top: 0.25rem;
 }
@@ -883,6 +887,10 @@ video {
 	font-size: 1.5rem;
 	line-height: 2rem;
 }
+.text-xl{
+	font-size: 1.25rem;
+	line-height: 1.75rem;
+}
 .text-base{
 	font-size: 1rem;
 	line-height: 1.5rem;
@@ -892,6 +900,9 @@ video {
 }
 .font-light{
 	font-weight: 300;
+}
+.font-bold{
+	font-weight: 700;
 }
 .font-normal{
 	font-weight: 400;

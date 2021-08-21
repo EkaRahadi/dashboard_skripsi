@@ -89,9 +89,10 @@ export default function EstimationForm() {
             <CardBody>
             {loadingBar && <LinearProgress />}
                 <form className="">
-                    <h6 className="text-purple-500 text-sm mt-3 mb-6 font-light uppercase">
+                    <h6 className="text-black-500 text-sm mt-3 mb-6 font-light uppercase">
                         Software Information
                     </h6>
+                    <a href={`${window.location.origin}/landing-detail`} className="text-purple-500 text-sm mt-3 mb-6 font-light uppercase">Input Information</a>
                     <div className="flex flex-wrap mt-10">
                         <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
                             <Input

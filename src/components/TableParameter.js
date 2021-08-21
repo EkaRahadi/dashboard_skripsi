@@ -268,7 +268,10 @@ export default function CardTable() {
     <Card>
       <CardHeader color="purple" contentPosition="none">
         <div className="w-full flex items-center justify-between">
-          <h2 className="text-white text-2xl">List Parameter</h2>
+          <div>
+            <h2 className="text-white text-2xl">List Parameter</h2>
+            <a href={`${window.location.origin}/parameter-detail`} className="text-blue-400 text-lg font-light">Parameter Information</a>
+          </div>
           <Button
             color="green"
             buttonType="filled"
