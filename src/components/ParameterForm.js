@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSetRecoilState } from "recoil";
-import { resultParameter } from "../store/index"
+import { resultParameter, resultParameterOptima } from "../store/index"
 import Card from '@material-tailwind/react/Card';
 import CardHeader from '@material-tailwind/react/CardHeader';
 import CardBody from '@material-tailwind/react/CardBody';
@@ -23,6 +23,7 @@ export default function ParameterForm() {
     const [alertMsg, setAlertMsg] = useState('Estimation Success!');
 
     const setDataParameter = useSetRecoilState(resultParameter);
+    const setResultParameterOptima = useSetRecoilState(resultParameterOptima);
     const token = window.localStorage.getItem("token");
 
     function Alert(props) {
@@ -70,8 +71,8 @@ export default function ParameterForm() {
         estimastionParameter(payload, token)
             .then(data => {
                 const result = data.data;
-                console.log(result);
                 setDataParameter(<><p>The optimal parameters are <b>A: {result.parameter[0]}</b>, <b>B: {result.parameter[1]}</b>, <b>C: {result.parameter[2]}</b>, <b>D: {result.parameter[3]}</b> with value <b>MMRE TDEV: {result.mmre_tdev}</b> and <b>MMRE EFFORT: {result.mmre_effort}</b> </p></>)
+                setResultParameterOptima(result);
                 setAlertMsg('Estimation Parameter Success !');
                 setSeverityAlert('success');
             })

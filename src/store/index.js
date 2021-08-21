@@ -33,3 +33,8 @@ export const resultParameter = atom({
     key: 'resultParameter',
     default: ``,
 });
+
+export const resultParameterOptima = atom({
+    key: 'resultParameterOptima',
+    default: {},
+});
